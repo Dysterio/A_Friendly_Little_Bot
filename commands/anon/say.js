@@ -10,16 +10,6 @@ module.exports = {
           message.channel.send("Can't nest more than 3 says...");
           return false;
         }
-        if (message.attachments.size > 0) {
-          nsfwjs.load()
-            .then(function (model) {
-              // Classify the image
-              return model.classify(message.attachments.array()[0])
-            })
-            .then(function (predictions) {
-              console.log('Predictions: ', predictions)
-            })
-        }
         message.delete().catch(console.error);
         output = "";
         for (i = 0; i < args.length; i++) {
