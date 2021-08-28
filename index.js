@@ -2,6 +2,9 @@
 // Files
 const fs = require("fs");
 // NSFW
+// const axios = require("axios");
+// const tf = require("@tensorflow/tfjs-node");
+// const nsfwjs = require("nsfwjs");
 const Filter = require("bad-words");
 const filter = new Filter();
 // Discord
@@ -39,10 +42,37 @@ for (const file of responseFiles) {
 }
 
 client.once("ready", () => {
-  fs.writeFileSync("./log.txt", "Ready [" + new Date().toLocaleString() + "]\n");
+  //fs.writeFileSync("./log.txt", "Ready [" + new Date().toLocaleString() + "]\n");
+});
+
+client.on("messageReactionAdd", (reaction, user) => {
+  if (reaction.message.guild.id === "442268458072276992") {
+    if (reaction.emoji.name === "isleep") {
+      reaction.message.react("<:nosleep:875336279909335090>");
+    }
+  }
 });
 
 client.on("message", message => {
+    // Check Tags
+    // let atts = message.attachments.array();
+    // for (i = 0; i < message.attachments.size; i++) {
+    //   let p = pred(atts[i].url);
+    //   console.log(p);
+    //   if ((p[0].className === "Porn") || (p[0].className === "Sexy") || (p[0].className === "Hentai")) {
+    //     if (p[0].probability >= 0.75) {
+    //       log(message.url + " => " + p);
+    //       return message.lineReplyNoMention("DK would not be happy to see this...");
+    //     } else {
+    //       message.react("🤔")
+    //     }
+    //     return;
+    //   }
+    // }
+
+    var checkIon = message.content.toLowerCase().split(/ +/).includes("ion");
+    if (checkIon) { message.react("⚛"); }
+
     // Check for DMs
     if (message.guild == null) {
       // Check for admin
@@ -108,3 +138,27 @@ client.login(`${mySecret}`);
 function log(text) {
   fs.appendFileSync("./log.txt", text + "\n");
 }
+
+// async function pred(url) {
+//   const pic = await axios.get(url, {
+//     responseType: "arraybuffer",
+//   });
+//   const model = await nsfwjs.load();
+//   const img = await tf.node.decodeImage(pic.data, 3);
+//   const predictions = await model.classify(img);
+//   img.dispose();
+//   return predictions;
+// }
+
+// function validURL(str) {
+//   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+//     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+//     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+//     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+//     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+//     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+//   if (pattern.test(str)) {
+//     return str.match(/\.(jpeg|jpg|gif|png)$/) != null;
+//   }
+// }
+
