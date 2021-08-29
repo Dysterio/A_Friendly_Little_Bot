@@ -1,17 +1,20 @@
 {
-  "name": "AFriendlyLittleBot",
+  "name": "a_friendly_little_bot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bad-words": "^3.0.4",
-    "discord-reply": "^0.1.2",
-    "discord.js": "^12.5.3",
+    "@discordjs/builders": "^0.5.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.22.0",
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1"
   }
 }
