@@ -1,10 +1,10 @@
 {
   "name": "a_friendly_little_bot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
   },
   "keywords": [],
   "author": "",
@@ -16,5 +16,17 @@
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1"
-  }
+  },
+  "devDependencies": {
+    "node": "^16.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dysterio/A_Friendly_Little_Bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dysterio/A_Friendly_Little_Bot/issues"
+  },
+  "homepage": "https://github.com/Dysterio/A_Friendly_Little_Bot#readme",
+  "description": ""
 }
