@@ -6,7 +6,8 @@ const keepAlive = require("./server");
 const { Client, Collection } = require("discord.js");
 
 // Create a new client instance
-const client = new Client({ intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_EMOJIS_AND_STICKERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS"], partials: ["CHANNEL"] });
+const client = new Client({ intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_EMOJIS_AND_STICKERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS"],
+                                partials: ["MESSAGE", "CHANNEL", "REACTION"] });
 
 // Load events
 const eventFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"));
