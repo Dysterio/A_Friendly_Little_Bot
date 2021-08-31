@@ -10,7 +10,7 @@ module.exports = {
         let output = "";
         if (hardRestart) {
             output += "```" + (await execSync("git reset --hard origin/master", {encoding: "utf-8"})) + "```";
-            message.reply(output);
+            await message.reply(output);
         }
         process.exit();
         message.client.logger.warn(((hardRestart) ? "Hard-" : "") + "Restarted the bot");
