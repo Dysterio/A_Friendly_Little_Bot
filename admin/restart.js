@@ -12,9 +12,7 @@ module.exports = {
             output += "```" + (await execSync("git reset --hard origin/master", {encoding: "utf-8"})) + "```";
             message.reply(output);
         }
-        execSync("busybox reboot", { encoding: "utf-8" }).then(() => {
-            message.reply("Bot restarted successfully!");
-        })
-        message.client.logger.warn(((hardRestart) ? "Hard" : "") + "Restarted the bot");
+        execSync("busybox reboot", { encoding: "utf-8" });
+        message.client.logger.warn(((hardRestart) ? "Hard-" : "") + "Restarted the bot");
     }
 }
