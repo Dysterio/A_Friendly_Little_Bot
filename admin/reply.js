@@ -1,5 +1,7 @@
 module.exports = {
     name: "reply",
+    usage: "<channelID> <messageID> <msg>",
+    desc: "Replys to a message",
     async execute(message, args) {
         if (args.length < 2) return;
         const channelID = args.shift();

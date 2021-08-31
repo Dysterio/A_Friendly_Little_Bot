@@ -1,5 +1,7 @@
 module.exports = {
     name: "DM",
+    usage: "<recipientID> <msg>",
+    desc: "Direct messages a specific user",
     async execute(message, args) {
         if (args.length < 1) return;
         const recipientID = args.shift();

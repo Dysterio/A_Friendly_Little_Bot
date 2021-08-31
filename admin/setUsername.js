@@ -1,5 +1,7 @@
 module.exports = {
     name: "setUsername",
+    usage: "<newUsername>",
+    desc: "Sets the bot's username",
     async execute(message, args){
         if (args.length === 0) return;
         const username = args.join(" ");

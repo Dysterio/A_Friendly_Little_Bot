@@ -1,5 +1,7 @@
 module.exports = {
     name: "react",
+    usage: "<channelID> <messageID> <emoji>",
+    desc: "Reacts to a message",
     async execute(message, args) {
         if (args.length !== 3) return;
         const channelID = args[0];

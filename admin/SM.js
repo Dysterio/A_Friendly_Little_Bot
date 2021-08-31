@@ -1,5 +1,7 @@
 module.exports = {
     name: "SM",
+    usage: "<channelID> <msg>",
+    desc: "Sends a server message",
     async execute(message, args) {
         if (args.length < 1) return;
         const channelID = args.shift();
