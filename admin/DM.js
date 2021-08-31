@@ -19,7 +19,9 @@ module.exports = {
                 ...(message.attachments ? {files: message.attachments} : {}),
                 ...(message.components.length ? {components: message.components} : {})
             }).then(() => {
-                message.reply("DM sent successfully!");
+                const log = `Direct messaged ${recipient.username} (${message.url})`;
+                message.client.logger.info(log);
+                message.reply(log);
             });
         });
     }

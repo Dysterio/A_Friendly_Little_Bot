@@ -1,5 +1,6 @@
 // Libraries
 const fs = require("fs");
+const winston = require("winston");
 require("dotenv").config();
 const keepAlive = require("./server");
 // Require the necessary discord.js classes
@@ -45,6 +46,32 @@ for (const file of adminFiles) {
     const admin = require(`./admin/${file}`);
     client.admin.set(admin.name, admin);
 }
+
+// Load logger
+const logLevels = { error: 0, warn: 1, info: 2, };
+client.logger = winston.createLogger({
+    levels: logLevels,
+    transports: [
+        new winston.transports.Console({
+            level: "info"
+        }),
+        new winston.transports.File({
+            filename: "logs.log",
+            level: "info"
+        }),
+    ],
+    format: winston.format.combine(
+        winston.format.timestamp({ format: "DD-MMM-YY HH:mm:ss" }),
+        winston.format.printf(info => `${info.timestamp} => [${info.level.toUpperCase()}]: ${info.message}`),
+    ),
+})
+
+// Error handler
+process.on("unhandledRejection", error => {
+    client.logger.error(error.toString());
+    const admin = client.users.cache.get(process.env.ADMIN_ID);
+    admin.send(error.toString());
+})
 
 // Login to Discord with the client token
 keepAlive();

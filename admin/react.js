@@ -10,7 +10,9 @@ module.exports = {
             channel.messages.fetch(messageID).then(msg => {
                 // Send Reaction
                 msg.react(emoji).then(() => {
-                    message.reply("Reaction sent successfully!");
+                    const log = `Reacted ${emoji} to ${msg.author.username} (${msg.url})`;
+                    message.client.logger.info(log);
+                    message.reply(log);
                 });
             });
         });

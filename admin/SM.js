@@ -19,7 +19,9 @@ module.exports = {
                 ...(message.attachments ? {files: message.attachments} : {}),
                 ...(message.components.length ? {components: message.components} : {})
             }).then(() => {
-                message.reply("SM sent successfully!");
+                const log = `Server messaged on ${channel.guild.name} #${channel.name} (${message.url})`;
+                message.client.logger.info(log);
+                message.reply(log);
             });
         });
     }

@@ -21,7 +21,9 @@ module.exports = {
                     ...(message.attachments ? {files: message.attachments} : {}),
                     ...(message.components.length ? {components: message.components} : {})
                 }).then(() => {
-                    message.reply("Reply sent successfully!");
+                    const log = `Replied to ${msg.author} (${msg.url})`;
+                    message.client.logger.info(log);
+                    message.reply(log);
                 });
             });
         });

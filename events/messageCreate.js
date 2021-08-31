@@ -19,7 +19,11 @@ module.exports = {
         // Execute command
         if (!command) return message.reply("No such command found...");
         command.execute(message, args)
-            .catch(error => { message.reply(error.toString()); });
+            .catch(error => {
+                const log = error.toString();
+                message.client.logger.warn(log);
+                message.reply(log);
+            });
     },
     async forward(message) {
         const admin = await message.client.users.cache.get(process.env.ADMIN_ID);
