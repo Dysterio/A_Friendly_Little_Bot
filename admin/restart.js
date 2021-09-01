@@ -6,15 +6,13 @@ module.exports = {
     usage: "<hardReset>",
     desc: "Restarts the bot",
     async execute(message, args) {
-        if (args.length !== 1) return;
-        const hardRestart = args[0] === "true";
         let output = "";
-        if (hardRestart) {
-            output += "```" + (await execSync("git reset --hard origin/master", {encoding: "utf-8"})) + "```";
+        if (args.length) {
+            output += "```" + (await execSync("git reset --hard " + args[0], {encoding: "utf-8"})) + "```";
             await message.reply(output);
             await fs.unlinkSync("logs.log");
         }
         process.exit();
-        message.client.logger.warn(((hardRestart) ? "Hard-" : "") + "Restarted the bot");
+        message.client.logger.warn(((args.length) ? "Hard-" : "") + "Restarted the bot");
     }
 }
