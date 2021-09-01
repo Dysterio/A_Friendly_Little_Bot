@@ -1,4 +1,5 @@
 const execSync = require("child_process").execSync;
+const fs = require("fs");
 
 module.exports = {
     name: "restart",
@@ -11,6 +12,7 @@ module.exports = {
         if (hardRestart) {
             output += "```" + (await execSync("git reset --hard origin/master", {encoding: "utf-8"})) + "```";
             await message.reply(output);
+            await fs.unlinkSync("../logs.log");
         }
         process.exit();
         message.client.logger.warn(((hardRestart) ? "Hard-" : "") + "Restarted the bot");
