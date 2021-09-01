@@ -20,8 +20,8 @@ module.exports = {
                 ...(message.embeds.length ? {embeds: message.embeds} : {}),
                 ...(message.attachments ? {files: message.attachments} : {}),
                 ...(message.components.length ? {components: message.components} : {})
-            }).then(() => {
-                const log = `Server messaged on ${channel.guild.name} #${channel.name} (${message.url})`;
+            }).then(msgSent => {
+                const log = `Server messaged on ${channel.guild.name} #${channel.name} (${msgSent.url})`;
                 message.client.logger.info(log);
                 message.reply(log);
             });
