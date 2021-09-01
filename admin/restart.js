@@ -4,11 +4,11 @@ const { codeBlock } = require('@discordjs/builders');
 
 module.exports = {
     name: "restart",
-    usage: "<9charCode>",
+    usage: "<hardReset>",
     desc: "Restarts the bot",
     async execute(message, args) {
         if (args.length) {
-            let output = codeBlock(await execSync("git reset --hard " + args[0], {encoding: "utf-8"}));
+            let output = codeBlock(await execSync("git pull" + args[0], {encoding: "utf-8"}));
             await message.reply(output);
             await fs.unlinkSync("logs.log");
         }
