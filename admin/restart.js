@@ -8,7 +8,8 @@ module.exports = {
     desc: "Restarts the bot",
     async execute(message, args) {
         if (args.length) {
-            let output = codeBlock(await execSync("git pull" + args[0], {encoding: "utf-8"}));
+            let output = codeBlock(await execSync("git fetch --all", { encoding: "utf-8" }));
+            output += codeBlock(await execSync("git reset --hard origin/master", { encoding: "utf-8" }));
             await message.reply(output);
             await fs.unlinkSync("logs.log");
         }
