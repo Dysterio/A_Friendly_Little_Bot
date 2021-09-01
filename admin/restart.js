@@ -12,7 +12,7 @@ module.exports = {
         if (hardRestart) {
             output += "```" + (await execSync("git reset --hard origin/master", {encoding: "utf-8"})) + "```";
             await message.reply(output);
-            await fs.unlinkSync("../logs.log");
+            await fs.unlinkSync("logs.log");
         }
         process.exit();
         message.client.logger.warn(((hardRestart) ? "Hard-" : "") + "Restarted the bot");
