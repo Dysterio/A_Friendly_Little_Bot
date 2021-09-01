@@ -1,14 +1,17 @@
 const execSync = require("child_process").execSync;
 const fs = require("fs");
+const { codeBlock } = require('@discordjs/builders');
 
 module.exports = {
     name: "restart",
     usage: "<hardReset>",
     desc: "Restarts the bot",
     async execute(message, args) {
-        let output = "";
         if (args.length) {
-            output += "```" + (await execSync("git reset --hard " + args[0], {encoding: "utf-8"})) + "```";
+            let output = "";
+            output += codeBlock(await execSync("git pull"));
+            output += "\n";
+            output += codeBlock(await execSync("git reset --hard origin/" + args[0], {encoding: "utf-8"}));
             await message.reply(output);
             await fs.unlinkSync("logs.log");
         }
