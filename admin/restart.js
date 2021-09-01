@@ -4,7 +4,7 @@ const { codeBlock } = require('@discordjs/builders');
 
 module.exports = {
     name: "restart",
-    usage: "<hardReset>",
+    usage: "<9charCode>",
     desc: "Restarts the bot",
     async execute(message, args) {
         if (args.length) {
