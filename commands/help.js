@@ -14,7 +14,7 @@ module.exports = {
             .setThumbnail(interaction.client.users.cache.get(process.env.ADMIN_ID).avatarURL());
         // Add commands
         interaction.client.commands.forEach(command => {
-            commands.addField(`!${command.data.name} ${command.usage}`, command.data.description);
+            commands.addField(`/${command.data.name} ${command.usage}`, command.data.description);
         })
         // Send commands
         interaction.reply({ embeds: [commands] }).then(() => {
