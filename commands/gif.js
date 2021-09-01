@@ -11,6 +11,7 @@ module.exports = {
                 .addChoice("Funny", "gif_funny")
                 .addChoice("Meme", "gif_meme")
                 .addChoice("Movie", "gif_movie")),
+    usage: "<yeetType>",
     async execute(interaction) {
         await interaction.reply("Gif!");
     }

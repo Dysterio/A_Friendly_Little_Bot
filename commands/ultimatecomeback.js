@@ -8,6 +8,7 @@ module.exports = {
             option.setName("user")
                 .setDescription("The user to target")
                 .setRequired(true)),
+    usage: "<target>",
     async execute(interaction) {
         let msg = "<@" + interaction.options.getMentionable("user") + ">, u dumb. Boom, I win!";
         await interaction.reply(msg);
