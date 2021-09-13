@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const {joinVoiceChannel} = require("@discordjs/voice");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,13 +12,10 @@ module.exports = {
         if (!botVC) return interaction.reply("The bot must be in a voice channel to execute this command 😤");
         if (memberVC.id !== botVC.id) return interaction.reply("You must be in the same voice channel as the bot to execute this command 😤");
 
-        const connection = joinVoiceChannel({
-            channelId: botVC.id,
-            guildId: interaction.guildId,
-            adapterCreator: interaction.guild.voiceAdapterCreator,
-        });
+        const client = interaction.client;
 
-        connection.destroy();
         interaction.reply("Leaving :cry:");
+        client.musicConnection.destroy();
+        client.musicQueue = [];
     }
 }

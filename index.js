@@ -47,6 +47,12 @@ for (const file of adminFiles) {
     client.admin.set(admin.name, admin);
 }
 
+// Load music player
+client.musicPlayer = null;
+client.musicConnection = null;
+client.musicQueue = [];
+
+
 // Load logger
 const logLevels = { error: 0, warn: 1, info: 2, };
 client.logger = winston.createLogger({

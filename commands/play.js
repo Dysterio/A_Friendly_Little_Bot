@@ -19,33 +19,54 @@ module.exports = {
                 .setRequired(true)),
     usage: "<song name>",
     async execute(interaction) {
+        // Error Check
+        const client = interaction.client;
         await interaction.deferReply();
         const vcChannel = interaction.member.voice.channel;
         if (!vcChannel) return interaction.editReply("You need to be in a voice channel to execute this command 😤");
 
+        // Get song
         const musicName = interaction.options.getString("name");
-        const connection = joinVoiceChannel({
-            channelId: vcChannel.id,
-            guildId: interaction.guildId,
-            adapterCreator: interaction.guild.voiceAdapterCreator,
-        });
-
         const videoFinder = async (query) => {
             const vidResult = await ytSearch(query);
             return (vidResult.videos.length > 1) ? vidResult.videos[0] : null;
         }
-
         const video = await videoFinder(musicName);
         if (!video) return interaction.editReply("Video not found...");
 
-        const stream = await ytdl(video.url, { filter: "audioonly" });
+        // Add to queue
+        client.musicQueue.push(video);
+        if (!client.musicConnection) {
+            await interaction.editReply("Playing: " + video.url);
+            client.musicConnection = joinVoiceChannel({
+                channelId: vcChannel.id,
+                guildId: interaction.guildId,
+                adapterCreator: interaction.guild.voiceAdapterCreator,
+            });
+            client.musicPlayer = await createAudioPlayer();
+            await this.nextSong(client.musicPlayer, client.musicQueue);
+            await client.musicConnection.subscribe(client.musicPlayer);
+        } else {
+            await interaction.editReply("Added to queue: " + video.url);
+        }
+
+        // Handle song end
+        client.musicPlayer.on(AudioPlayerStatus.Idle, async () => {
+            if (!client.musicConnection) return;
+            if (client.musicQueue.length === 0) {
+                client.musicConnection.destroy();
+                client.musicConnection = null;
+                client.musicPlayer = null;
+            } else {
+                await this.nextSong(client.musicPlayer, client.musicQueue);
+            }
+        });
+    },
+    async nextSong(player, musicQueue) {
+        const next = musicQueue[0];
+        const stream = await ytdl(next.url, { filter: "audioonly" });
         const resource = await createAudioResource(stream, { inputType: StreamType.Arbitrary });
-        const player = await createAudioPlayer();
-
         await player.play(resource);
-        await connection.subscribe(player);
-
-        player.on(AudioPlayerStatus.Idle, () => connection.destroy());
-        await interaction.editReply(video.url);
+        musicQueue.shift();
     }
 }
