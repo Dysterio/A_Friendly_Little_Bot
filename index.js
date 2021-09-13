@@ -48,9 +48,11 @@ for (const file of adminFiles) {
 }
 
 // Load music player
-client.musicPlayer = null;
-client.musicConnection = null;
-client.musicQueue = [];
+(async () => {
+    client.musicPlayer = await require("@discordjs/voice").createAudioPlayer();
+    client.musicConnection = null;
+    client.musicQueue = [];
+})();
 
 
 // Load logger

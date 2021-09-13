@@ -43,7 +43,6 @@ module.exports = {
                 guildId: interaction.guildId,
                 adapterCreator: interaction.guild.voiceAdapterCreator,
             });
-            client.musicPlayer = await createAudioPlayer();
             await this.nextSong(client.musicPlayer, client.musicQueue);
             await client.musicConnection.subscribe(client.musicPlayer);
         } else {
@@ -56,7 +55,6 @@ module.exports = {
             if (client.musicQueue.length === 0) {
                 client.musicConnection.destroy();
                 client.musicConnection = null;
-                client.musicPlayer = null;
             } else {
                 await this.nextSong(client.musicPlayer, client.musicQueue);
             }

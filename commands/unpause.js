@@ -2,8 +2,8 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("leave")
-        .setDescription("Leaves the voice channel"),
+        .setName("unpause")
+        .setDescription("Unpauses the current song"),
     usage: "",
     async execute(interaction) {
         const memberVC = interaction.member.voice.channel;
@@ -14,10 +14,7 @@ module.exports = {
 
         const client = interaction.client;
 
-        interaction.reply("Leaving :cry:");
-        client.musicPlayer.stop(true);
-        client.musicConnection.destroy();
-        client.musicConnection = null;
-        client.musicQueue = [];
+        interaction.reply("Unpausing song");
+        client.musicPlayer.unpause();
     }
 }

@@ -1,9 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const {MessageEmbed} = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("leave")
-        .setDescription("Leaves the voice channel"),
+        .setName("queue")
+        .setDescription("Displays the songs queued"),
     usage: "",
     async execute(interaction) {
         const memberVC = interaction.member.voice.channel;
@@ -14,10 +15,18 @@ module.exports = {
 
         const client = interaction.client;
 
-        interaction.reply("Leaving :cry:");
-        client.musicPlayer.stop(true);
-        client.musicConnection.destroy();
-        client.musicConnection = null;
-        client.musicQueue = [];
+        // Create embed
+        let songs = new MessageEmbed()
+            .setColor("#0000000")
+            .setTitle("Songs Queue")
+            .setThumbnail(interaction.client.users.cache.get(process.env.ADMIN_ID).avatarURL());
+        // Add commands
+        client.musicQueue.forEach(song => {
+            songs.addField(song.title, song.timestamp);
+        })
+        // Send commands
+        interaction.reply({ embeds: [songs] }).then(() => {
+            interaction.client.logger.info("Retrieved song queue");
+        });
     }
 }
