@@ -14,10 +14,12 @@ module.exports = {
 
         const client = interaction.client;
 
-        interaction.reply("Leaving :cry:");
+        interaction.reply("Disconnecting");
         client.musicPlayer.stop(true);
-        client.musicConnection.destroy();
-        client.musicConnection = null;
+        if (client.musicConnection) {
+            client.musicConnection.destroy();
+            client.musicConnection = null;
+        }
         client.musicQueue = [];
     }
 }

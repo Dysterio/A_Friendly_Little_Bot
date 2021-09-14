@@ -30,7 +30,9 @@ module.exports = {
         client.musicQueue.forEach(song => {
             upNext += `[${song.title}](${song.url})\n`;
         })
-        songs.addField("Up Next:", upNext);
+        if (upNext !== "") {
+            songs.addField("Up Next:", upNext);
+        }
         // Send commands
         interaction.reply({ embeds: [songs] }).then(() => {
             interaction.client.logger.info("Retrieved song queue");
