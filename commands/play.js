@@ -43,7 +43,7 @@ module.exports = {
                 guildId: interaction.guildId,
                 adapterCreator: interaction.guild.voiceAdapterCreator,
             });
-            await this.nextSong(client.musicPlayer, client.musicQueue);
+            await this.nextSong(client);
             await client.musicConnection.subscribe(client.musicPlayer);
         } else {
             await interaction.editReply("Added to queue: " + video.url);
@@ -55,16 +55,17 @@ module.exports = {
             if (client.musicQueue.length === 0) {
                 client.musicConnection.destroy();
                 client.musicConnection = null;
+                client.playingNow = null;
             } else {
-                await this.nextSong(client.musicPlayer, client.musicQueue);
+                await this.nextSong(client);
             }
         });
     },
-    async nextSong(player, musicQueue) {
-        const next = musicQueue[0];
+    async nextSong(client) {
+        const next = client.musicQueue[0];
         const stream = await ytdl(next.url, { filter: "audioonly" });
         const resource = await createAudioResource(stream, { inputType: StreamType.Arbitrary });
-        await player.play(resource);
-        musicQueue.shift();
+        await client.musicPlayer.play(resource);
+        client.nowPlaying = client.musicQueue.shift();
     }
 }

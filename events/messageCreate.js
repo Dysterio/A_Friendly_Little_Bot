@@ -21,8 +21,8 @@ module.exports = {
         command.execute(message, args)
             .catch(error => {
                 const log = error.toString();
-                message.client.logger.warn(log);
-                message.reply(log);
+                message.client.logger.error(log);
+                throw error;
             });
     },
     async forward(message) {

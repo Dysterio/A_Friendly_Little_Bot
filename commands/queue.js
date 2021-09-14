@@ -15,15 +15,22 @@ module.exports = {
 
         const client = interaction.client;
 
+        let vidID = client.nowPlaying.url.split("watch?v=")[1];
+        const ampPos = vidID.indexOf("&");
+        if (ampPos !== -1) vidID = vidID.substring(0, ampPos);
+        console.log(`https://img.youtube.com/vi/${vidID}/0.jpg`);
         // Create embed
         let songs = new MessageEmbed()
             .setColor("#0000000")
             .setTitle("Songs Queue")
-            .setThumbnail(interaction.client.users.cache.get(process.env.ADMIN_ID).avatarURL());
+            .setDescription(`Now playing: [${client.nowPlaying.title}](${client.nowPlaying.url})`)
+            .setThumbnail(`https://img.youtube.com/vi/${vidID}/0.jpg`);
         // Add commands
+        let upNext = "";
         client.musicQueue.forEach(song => {
-            songs.addField(song.title, song.timestamp);
+            upNext += `[${song.title}](${song.url})\n`;
         })
+        songs.addField("Up Next:", upNext);
         // Send commands
         interaction.reply({ embeds: [songs] }).then(() => {
             interaction.client.logger.info("Retrieved song queue");

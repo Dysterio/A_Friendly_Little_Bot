@@ -10,8 +10,8 @@ module.exports = {
         try {
             await command.execute(interaction);
         } catch(error) {
-            interaction.client.logger.error(error.toString());
             await interaction.reply({ content: "There was an error while executing this command!", ephemeral: true });
+            throw error;
         }
         interaction.client.logger.info(`${interaction.user.username} triggered ${interaction.commandName} in ${interaction.guild.name} #${interaction.channel.name}`);
     },

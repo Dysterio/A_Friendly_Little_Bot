@@ -2,7 +2,6 @@
 const fs = require("fs");
 const winston = require("winston");
 require("dotenv").config();
-const keepAlive = require("./server");
 // Require the necessary discord.js classes
 const { Client, Collection } = require("discord.js");
 
@@ -52,6 +51,7 @@ for (const file of adminFiles) {
     client.musicPlayer = await require("@discordjs/voice").createAudioPlayer();
     client.musicConnection = null;
     client.musicQueue = [];
+    client.playingNow = null;
 })();
 
 
@@ -75,12 +75,11 @@ client.logger = winston.createLogger({
 })
 
 // Error handler
-process.on("unhandledRejection", error => {
+process.on("unhandledRejection", async error => {
     client.logger.error(error.toString());
     const admin = client.users.cache.get(process.env.ADMIN_ID);
-    admin.send(error.toString());
+    await admin.send(error.stack);
 })
 
 // Login to Discord with the client token
-keepAlive();
 client.login(process.env.TOKEN);
