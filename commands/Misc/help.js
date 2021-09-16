@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
+const fs = require("fs");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -13,9 +14,16 @@ module.exports = {
             .setTitle("A Friendly Little Bot's Commands")
             .setThumbnail(interaction.client.users.cache.get(process.env.ADMIN_ID).avatarURL());
         // Add commands
-        interaction.client.commands.forEach(command => {
-            commands.addField(`/${command.data.name} ${command.usage}`, command.data.description);
-        })
+        const commandFolders = fs.readdirSync("./commands");
+        for (const folder of commandFolders) {
+            let group = "";
+            const commandFiles = fs.readdirSync("./commands/" + folder).filter(file => file.endsWith(".js"));
+            for (const file of commandFiles) {
+                const command = require(`../../commands/${folder}/${file}`);
+                group += `**/${command.data.name} ${command.usage}**\n➠${command.data.description}\n`;
+            }
+            commands.addField(folder + " ⭐", group);
+        }
         // Send commands
         interaction.reply({ embeds: [commands] }).then(() => {
             interaction.client.logger.info("Retrieved user commands");
