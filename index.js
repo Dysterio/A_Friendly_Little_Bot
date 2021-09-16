@@ -2,6 +2,7 @@
 const fs = require("fs");
 const winston = require("winston");
 require("dotenv").config();
+const TicTacToe = require("./TicTacToe");
 // Require the necessary discord.js classes
 const { Client, Collection } = require("discord.js");
 
@@ -22,12 +23,15 @@ for (const file of eventFiles) {
 
 // Load commands
 client.commands = new Collection();
-const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    // Set a new item in the Collection
-    // With the key as the command name and the value as the exported module
-    client.commands.set(command.data.name, command);
+const commandFolders = fs.readdirSync("./commands");
+for (const folder of commandFolders) {
+    const commandFiles = fs.readdirSync("./commands/" + folder).filter(file => file.endsWith(".js"));
+    for (const file of commandFiles) {
+        const command = require(`./commands/${folder}/${file}`);
+        // Set a new item in the Collection
+        // With the key as the command name and the value as the exported module
+        client.commands.set(command.data.name, command);
+    }
 }
 
 // Load responses
@@ -73,6 +77,15 @@ client.logger = winston.createLogger({
         winston.format.printf(info => `${info.timestamp} => [${info.level.toUpperCase()}]: ${info.message}`),
     ),
 })
+
+// Load Tic Tac Toe
+client.tttGames = new Map();
+client.ticTacToeKB = new Collection();
+const kbFiles = fs.readdirSync("./gameKeyBinds/TicTacToe").filter(file => file.endsWith(".js"));
+for (const file of kbFiles) {
+    const kb = require(`./gameKeyBinds/TicTacToe/${file}`);
+    client.ticTacToeKB.set(kb.name, kb);
+}
 
 // Error handler
 process.on("unhandledRejection", async error => {

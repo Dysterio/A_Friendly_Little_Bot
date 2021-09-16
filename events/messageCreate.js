@@ -3,7 +3,7 @@ module.exports = {
     async execute(message) {
         if (message.author.bot) return;
         const dm = message.channel.type === "DM";
-        (dm) ? await this.dmHandler(message) : await this.responseHandler(message);
+        (dm) ? await this.dmHandler(message) : await this.messageHandler(message);
     },
     async dmHandler(message) {
         const admin = message.author.id === process.env.ADMIN_ID;
@@ -34,7 +34,12 @@ module.exports = {
             components: message.components
         });
     },
-    async responseHandler(message) {
+    async messageHandler(message) {
+        message.client.ticTacToeKB.forEach(kb => {
+            if (message.content.toLowerCase() !== kb.name) return;
+            kb.execute(message);
+        })
+
         message.client.responses.forEach(response => {
             if (!message.content.toLowerCase().split(/ +/).includes(response.name)) return;
             response.execute(message);
