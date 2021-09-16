@@ -14,7 +14,7 @@ module.exports = {
     async execute(interaction) {
         // Variables
         const client = interaction.client;
-        const opponent = await interaction.guild.members.fetch(interaction.options.getMentionable("opponent"));
+        const opponent = await interaction.guild.members.fetch(interaction.options.getUser("opponent"));
         // Error Check
         if (client.tttGames.has(interaction.member)) return interaction.reply("You are already in a game");
         if (client.tttGames.has(opponent)) return interaction.reply("Opponent is in a game");
