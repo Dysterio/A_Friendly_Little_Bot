@@ -54,7 +54,7 @@ module.exports = {
                         "\n-+-+-" +
                         "\na|s|d" +
                         "\n-+-+-" +
-                        "\nz|x|c`\n" + opponent.user.username + "'s turn.");
+                        "\nz|x|c`\n" + ttt.currPlayer().user.username + "'s turn.");
                 interaction.channel.send({ embeds: [embed] });
                 interaction.channel.send(ttt.getBoard());
             });

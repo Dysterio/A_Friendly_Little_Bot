@@ -18,7 +18,7 @@ class TicTacToe {
         ]
         this.#player1 = p1;
         this.#player2 = p2;
-        this.#p1Turn = false;
+        this.#p1Turn = Math.round(Math.random()) == 1;
     }
 
     // Makes a turn
@@ -88,9 +88,8 @@ class TicTacToe {
 
     // Get current player
     makeMove(msg, player, row, col) {
-        const currPlayer = this.#p1Turn ? this.#player1 : this.#player2;
         const nextPlayer = this.#p1Turn ? this.#player2 : this.#player1;
-        if (player !== currPlayer) return msg.reply("It's not your turn");
+        if (player !== this.currPlayer()) return msg.reply("It's not your turn");
         if (!this.move(row, col)) return msg.reply("Invalid move");
         msg.channel.send(this.getBoard());
         if (this.checkWin()) {
@@ -114,8 +113,8 @@ class TicTacToe {
         }
     }
 
-    currTurnSymbol() {
-        return this.#p1Turn ? this.#player1Symb : this.#player2Symb;
+    currPlayer() {
+        return this.#p1Turn ? this.#player1 : this.#player2;
     }
 }
 
