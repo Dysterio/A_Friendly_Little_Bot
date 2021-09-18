@@ -14,28 +14,24 @@ module.exports = {
         if (memberVC.id !== botVC.id) return interaction.reply("You must be in the same voice channel as the bot to execute this command 😤");
 
         const client = interaction.client;
+        const songQueue = client.musicQueue.get(interaction.guildId).songs;
 
-        let vidID = client.nowPlaying.url.split("watch?v=")[1];
-        const ampPos = vidID.indexOf("&");
-        if (ampPos !== -1) vidID = vidID.substring(0, ampPos);
-        console.log(`https://img.youtube.com/vi/${vidID}/0.jpg`);
         // Create embed
         let songs = new MessageEmbed()
             .setColor("#0000000")
             .setTitle("Songs Queue")
-            .setDescription(`Now playing: [${client.nowPlaying.title}](${client.nowPlaying.url})`)
-            .setThumbnail(`https://img.youtube.com/vi/${vidID}/0.jpg`);
-        // Add commands
+            .setDescription(`Now playing: [${songQueue[0].title}](${songQueue[0].url})`);
+        // Add songs
         let upNext = "";
-        client.musicQueue.forEach(song => {
-            upNext += `[${song.title}](${song.url})\n`;
+        songQueue.forEach(song => {
+            if (song !== songQueue[0]) {
+                upNext += `[${song.title}](${song.url})\n`;
+            }
         })
         if (upNext !== "") {
             songs.addField("Up Next:", upNext);
         }
         // Send commands
-        interaction.reply({ embeds: [songs] }).then(() => {
-            interaction.client.logger.info("Retrieved song queue");
-        });
+        await interaction.reply({ embeds: [songs] });
     }
 }

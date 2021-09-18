@@ -25,47 +25,82 @@ module.exports = {
         const vcChannel = interaction.member.voice.channel;
         if (!vcChannel) return interaction.editReply("You need to be in a voice channel to execute this command 😤");
 
-        // Get song
-        const musicName = interaction.options.getString("name");
-        const videoFinder = async (query) => {
-            const vidResult = await ytSearch(query);
-            return (vidResult.videos.length > 1) ? vidResult.videos[0] : null;
-        }
-        const video = await videoFinder(musicName);
-        if (!video) return interaction.editReply("Video not found...");
+        // Get server and song info
+        const serverQueue = client.musicQueue.get(interaction.guildId);
+        const songName = interaction.options.getString("name");
+        let song = {};
 
-        // Add to queue
-        client.musicQueue.push(video);
-        if (!client.musicConnection) {
-            await interaction.editReply("Playing: " + video.url);
-            client.musicConnection = joinVoiceChannel({
-                channelId: vcChannel.id,
-                guildId: interaction.guildId,
-                adapterCreator: interaction.guild.voiceAdapterCreator,
-            });
-            await this.nextSong(client);
-            await client.musicConnection.subscribe(client.musicPlayer);
-        } else {
-            await interaction.editReply("Added to queue: " + video.url);
-        }
-
-        // Handle song end
-        client.musicPlayer.on(AudioPlayerStatus.Idle, async () => {
-            if (!client.musicConnection) return;
-            if (client.musicQueue.length === 0) {
-                client.musicConnection.destroy();
-                client.musicConnection = null;
-                client.playingNow = null;
-            } else {
-                await this.nextSong(client);
+        // Get video
+        if (ytdl.validateURL(songName)) { // URL passed
+            const songInfo = await ytdl.getInfo(songName);
+            song = {
+                title: songInfo.videoDetails.title,
+                url: songInfo.videoDetails.video_url
+            };
+        } else { // Keywords passed
+            // Search youtube for the keywords
+            const videoFinder = async (query) => {
+                const videoResult = await ytSearch(query);
+                return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
             }
-        });
-    },
-    async nextSong(client) {
-        const next = client.musicQueue[0];
-        const stream = await ytdl(next.url, { filter: "audioonly" });
-        const resource = await createAudioResource(stream, { inputType: StreamType.Arbitrary });
-        await client.musicPlayer.play(resource);
-        client.nowPlaying = client.musicQueue.shift();
+            const video = await videoFinder(songName);
+            // Check if video exists
+            if (video) song = { title: video.title, url: video.url };
+            else return interaction.editReply("Error finding video");
+        }
+
+        // Add song to server queue
+        if (!serverQueue) {
+            const queueConstructor = {
+                voiceChannel: vcChannel,
+                textChannel: interaction.channel,
+                connection: null,
+                player: createAudioPlayer(),
+                songs: []
+            }
+            client.musicQueue.set(interaction.guildId, queueConstructor);
+            queueConstructor.songs.push(song);
+            // Join the voice channel
+            try {
+                const connection = joinVoiceChannel({
+                    channelId: vcChannel.id,
+                    guildId: interaction.guildId,
+                    adapterCreator: interaction.guild.voiceAdapterCreator
+                });
+                queueConstructor.connection = connection;
+                await videoPlayer(client, interaction.guild, queueConstructor.songs[0]);
+                await interaction.editReply(":+1:");
+            } catch (err) { // Handle connection failure
+                client.musicQueue.delete(interaction.guildId);
+                await interaction.editReply("There was an error connecting!");
+                throw err;
+            }
+        } else {
+            // Add song to queue
+            serverQueue.songs.push(song);
+            return interaction.editReply(song.title + " added to queue!");
+        }
     }
+}
+/** Plays the next song on the queue */
+const videoPlayer = async (client, guild, song) => {
+    const songQueue = client.musicQueue.get(guild.id);
+    // Check for empty queue
+    if (!song) {
+        songQueue.player.stop(true);
+        songQueue.connection.destroy();
+        client.musicQueue.delete(guild.id);
+        return;
+    }
+    // Play song
+    const stream = ytdl(song.url, { filter: "audioonly" });
+    const resource = await createAudioResource(stream, { inputType: StreamType.Arbitrary });
+    songQueue.player.play(resource);
+    songQueue.connection.subscribe(songQueue.player);
+    // Play next song
+    songQueue.player.on(AudioPlayerStatus.Idle, () => {
+        songQueue.songs.shift();
+        videoPlayer(client, guild, songQueue.songs[0]);
+    });
+    await songQueue.textChannel.send("Now Playing: " + song.title);
 }
