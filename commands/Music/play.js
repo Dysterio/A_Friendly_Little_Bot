@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const ytdl = require("ytdl-core");
-const ytSearch = require("yt-search");
+const youtube = require("play-dl");
 const {
     AudioPlayerStatus,
     StreamType,
@@ -31,17 +30,19 @@ module.exports = {
         let song = {};
 
         // Get video
-        if (ytdl.validateURL(songName)) { // URL passed
-            const songInfo = await ytdl.getInfo(songName);
+        const check = youtube.yt_validate(songName);
+        if (check) { // URL passed
+            if (check === "playlist") return interaction.editReply("The bot cannot handle playlists yet.");
+            const songInfo = await youtube.video_info(songName);
             song = {
-                title: songInfo.videoDetails.title,
-                url: songInfo.videoDetails.video_url
+                title: songInfo.video_details.title,
+                url: songInfo.video_details.url
             };
         } else { // Keywords passed
             // Search youtube for the keywords
             const videoFinder = async (query) => {
-                const videoResult = await ytSearch(query);
-                return (videoResult.videos.length > 1) ? videoResult.videos[0] : null;
+                const result = await youtube.search(query, { type: "video", limit: 1 });
+                return result[0];
             }
             const video = await videoFinder(songName);
             // Check if video exists
@@ -93,8 +94,8 @@ const videoPlayer = async (client, guild, song) => {
         return;
     }
     // Play song
-    const stream = ytdl(song.url, { filter: "audioonly" });
-    const resource = await createAudioResource(stream, { inputType: StreamType.Arbitrary });
+    const source = await youtube.stream(song.url);
+    const resource = await createAudioResource(source.stream, { inputType: source.type });
     songQueue.player.play(resource);
     songQueue.connection.subscribe(songQueue.player);
     // Play next song
