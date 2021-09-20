@@ -72,13 +72,15 @@ class TicTacToe {
 
     // Output the board
     getBoard() {
-        let boardString = "";
+        let boardString = "⬛⬛⬛⬛⬛\n";
         for (let row = 0; row < 3; row++) {
+            boardString += "⬛";
             for (let col = 0; col < 3; col++) {
                 boardString += this.#board[row][col];
             }
-            boardString += "\n";
+            boardString += "⬛\n";
         }
+        boardString += "⬛⬛⬛⬛⬛";
         return boardString;
     }
 
