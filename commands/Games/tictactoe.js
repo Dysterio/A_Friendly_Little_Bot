@@ -39,6 +39,7 @@ module.exports = {
             collector.on("collect", i => {
                 if (accepted) return i.reply({ content: "You already accepted it genius...", ephemeral: true });
                 if (i.user.id !== opponent.id) return i.reply({ content: "Not meant for u :triumph:", ephemeral: true });
+                if (client.tttGames.has(i.user.id)) return i.reply({ content: "You already joined another game...", ephemeral: true});
                 i.reply("Challenge Accepted");
                 accepted = true;
                 // Initialize game

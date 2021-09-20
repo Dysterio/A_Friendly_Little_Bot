@@ -90,7 +90,11 @@ class TicTacToe {
             .setColor("#000000")
             .setTitle("TicTacToe!")
             .setDescription(who.user.username + "'s turn...");
-        this.#infoMsg.edit({ content: this.getBoard(), embeds: [embed] });
+
+        this.#infoMsg.channel.send({ content: this.getBoard(), embeds: [embed] }).then(msg => {
+            this.#infoMsg.delete();
+            this.#infoMsg = msg;
+        });
     }
 
     // Delete the current game
