@@ -18,7 +18,7 @@ module.exports = {
         // Error Check
         if (client.tttGames.has(interaction.member)) return interaction.reply("You are already in a game");
         if (client.tttGames.has(opponent)) return interaction.reply("Opponent is in a game");
-        if (interaction.member === opponent) return interaction.reply("Get some friends smh...");
+        //if (interaction.member === opponent) return interaction.reply("Get some friends smh...");
         // As opponent to accept
         const button = new MessageButton()
             .setCustomId("acceptTTT")
@@ -42,10 +42,6 @@ module.exports = {
                 i.reply("Challenge Accepted");
                 accepted = true;
                 // Initialize game
-                const ttt = new TicTacToe(interaction.member, opponent);
-                client.tttGames.set(interaction.member, ttt);
-                client.tttGames.set(opponent, ttt);
-                // Show board to players
                 const embed = new MessageEmbed()
                     .setColor("#000000")
                     .setTitle("TicTacToe!")
@@ -54,9 +50,15 @@ module.exports = {
                         "\n-+-+-" +
                         "\na|s|d" +
                         "\n-+-+-" +
-                        "\nz|x|c`\n" + ttt.currPlayer().user.username + "'s turn.");
+                        "\nz|x|c`");
                 interaction.channel.send({ embeds: [embed] });
-                interaction.channel.send(ttt.getBoard());
+                interaction.channel.send("⭐").then(msg => {
+                    const ttt = new TicTacToe(msg, interaction.member, opponent);
+                    client.tttGames.set(interaction.member, ttt);
+                    client.tttGames.set(opponent, ttt);
+                    // Show board to players
+                    ttt.announceNextTurn(ttt.currPlayer());
+                });
             });
         })
     }

@@ -2,6 +2,7 @@ const {MessageEmbed} = require("discord.js");
 
 class TicTacToe {
     static colors = ["blue", "brown", "orange", "purple", "yellow"];
+    #infoMsg;
     #board;
     #player1;
     #player2;
@@ -9,7 +10,8 @@ class TicTacToe {
     #player1Symb = ":o2:";
     #player2Symb = ":negative_squared_cross_mark:";
     #bgTile;
-    constructor(p1, p2) {
+    constructor(msg, p1, p2) {
+        this.#infoMsg = msg;
         this.#bgTile = ":" + TicTacToe.colors[Math.floor(Math.random() * TicTacToe.colors.length)] + "_square" + ":";
         this.#board = [
             [this.#bgTile, this.#bgTile, this.#bgTile],
@@ -80,6 +82,14 @@ class TicTacToe {
         return boardString;
     }
 
+    announceNextTurn(who) {
+        const embed = new MessageEmbed()
+            .setColor("#000000")
+            .setTitle("TicTacToe!")
+            .setDescription(who.user.username + "'s turn...");
+        this.#infoMsg.edit({ content: this.getBoard(), embeds: [embed] });
+    }
+
     // Delete the current game
     deleteGame(games) {
         games.delete(this.#player1);
@@ -91,7 +101,6 @@ class TicTacToe {
         const nextPlayer = this.#p1Turn ? this.#player2 : this.#player1;
         if (player !== this.currPlayer()) return msg.reply("It's not your turn");
         if (!this.move(row, col)) return msg.reply("Invalid move");
-        msg.channel.send(this.getBoard());
         if (this.checkWin()) {
             const win = new MessageEmbed()
                 .setColor("#000000")
@@ -105,12 +114,9 @@ class TicTacToe {
             msg.channel.send({ embeds: [draw] });
             this.deleteGame(msg.client.tttGames)
         } else {
-            const embed = new MessageEmbed()
-                .setColor("#000000")
-                .setTitle("TicTacToe!")
-                .setDescription(nextPlayer.user.username + "'s turn...");
-            msg.channel.send({ embeds: [embed] });
+            this.announceNextTurn(nextPlayer);
         }
+        msg.delete();
     }
 
     currPlayer() {
