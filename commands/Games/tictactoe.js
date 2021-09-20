@@ -57,7 +57,7 @@ module.exports = {
                     client.tttGames.set(interaction.member, ttt);
                     client.tttGames.set(opponent, ttt);
                     // Show board to players
-                    ttt.announceNextTurn(ttt.currPlayer());
+                    ttt.announceNextTurn(null, ttt.currPlayer());
                 });
             });
         })
