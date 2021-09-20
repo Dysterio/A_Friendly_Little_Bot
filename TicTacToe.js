@@ -82,7 +82,8 @@ class TicTacToe {
         return boardString;
     }
 
-    announceNextTurn(who) {
+    announceNextTurn(state, who) {
+        if (state) return this.#infoMsg.edit({ content: this.getBoard(), embeds: [state] });
         const embed = new MessageEmbed()
             .setColor("#000000")
             .setTitle("TicTacToe!")
@@ -101,21 +102,19 @@ class TicTacToe {
         const nextPlayer = this.#p1Turn ? this.#player2 : this.#player1;
         if (player !== this.currPlayer()) return msg.reply("It's not your turn");
         if (!this.move(row, col)) return msg.reply("Invalid move");
+        let state = null;
         if (this.checkWin()) {
-            const win = new MessageEmbed()
+            state = new MessageEmbed()
                 .setColor("#000000")
                 .setTitle(player.user.username + " has won!");
-            msg.channel.send({ embeds: [win] });
             this.deleteGame(msg.client.tttGames);
         } else if (this.checkDraw()) {
-            const draw = new MessageEmbed()
+            state = new MessageEmbed()
                 .setColor("#000000")
                 .setTitle("Draw!");
-            msg.channel.send({ embeds: [draw] });
             this.deleteGame(msg.client.tttGames)
-        } else {
-            this.announceNextTurn(nextPlayer);
         }
+        this.announceNextTurn(state, nextPlayer);
         msg.delete();
     }
 
