@@ -88,7 +88,7 @@ const videoPlayer = async (client, guild, song) => {
     const songQueue = client.musicQueue.get(guild.id);
     // Check for empty queue
     if (!song) {
-        songQueue.player.stop(true);
+        if (songQueue.player) songQueue.player.stop(true);
         songQueue.connection.destroy();
         client.musicQueue.delete(guild.id);
         return;
