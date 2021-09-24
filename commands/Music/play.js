@@ -86,9 +86,10 @@ module.exports = {
 /** Plays the next song on the queue */
 const videoPlayer = async (client, guild, song) => {
     const songQueue = client.musicQueue.get(guild.id);
+    if (!songQueue) return;
     // Check for empty queue
     if (!song) {
-        if (songQueue.player) songQueue.player.stop(true);
+        songQueue.player.stop(true);
         songQueue.connection.destroy();
         client.musicQueue.delete(guild.id);
         return;
