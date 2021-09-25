@@ -2,7 +2,6 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const youtube = require("play-dl");
 const {
     AudioPlayerStatus,
-    StreamType,
     createAudioPlayer,
     createAudioResource,
     joinVoiceChannel,
@@ -115,14 +114,4 @@ const videoPlayer = async (client, guild, song) => {
     const resource = await createAudioResource(source.stream, { inputType: source.type });
     songQueue.player.play(resource);
     songQueue.connection.subscribe(songQueue.player);
-<<<<<<< HEAD
 }
-=======
-    // Play next song
-    songQueue.player.on(AudioPlayerStatus.Idle, () => {
-        songQueue.songs.shift();
-        videoPlayer(client, guild, songQueue.songs[0]);
-    });
-    await songQueue.textChannel.send("Now Playing: " + song.title);
-}
->>>>>>> a5b868c0d5969bc06d460853700328dc66d516b6
