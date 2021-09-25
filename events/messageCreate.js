@@ -35,13 +35,14 @@ module.exports = {
         });
     },
     async messageHandler(message) {
-        message.client.ticTacToeKB.forEach(kb => {
-            if (message.content.toLowerCase() !== kb.name) return;
-            kb.execute(message);
-        })
+        const client = message.client;
+        const msgContent = message.content.toLowerCase();
+        if (client.tttKBs.keybinds.includes(msgContent)) {
+            return client.tttKBs.execute(message);
+        }
 
         message.client.responses.forEach(response => {
-            if (!message.content.toLowerCase().split(/ +/).includes(response.name)) return;
+            if (!msgContent.split(/ +/).includes(response.name)) return;
             response.execute(message);
         });
     },

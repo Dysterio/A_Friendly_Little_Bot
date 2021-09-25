@@ -74,12 +74,7 @@ client.logger = winston.createLogger({
 
 // Load Tic Tac Toe
 client.tttGames = new Map();
-client.ticTacToeKB = new Collection();
-const kbFiles = fs.readdirSync("./gameKeyBinds/TicTacToe").filter(file => file.endsWith(".js"));
-for (const file of kbFiles) {
-    const kb = require(`./gameKeyBinds/TicTacToe/${file}`);
-    client.ticTacToeKB.set(kb.name, kb);
-}
+client.tttKBs = require("./gameKeyBinds/tictactoe");
 
 // Error handler
 process.on("unhandledRejection", async error => {
