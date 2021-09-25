@@ -14,6 +14,6 @@ module.exports = {
         if (!serverQueue) return interaction.reply("There are no songs in the queue");
 
         interaction.reply("Skipping the current song");
-        serverQueue.player.stop(true);
+        serverQueue.player.stop();
     }
 }
