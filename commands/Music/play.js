@@ -102,6 +102,7 @@ const joinVC = async (interaction, vcChannel, queueConstructor) => {
 /** Plays the next song on the queue */
 const videoPlayer = async (client, guild, song) => {
     const songQueue = client.musicQueue.get(guild.id);
+    if (!songQueue) return;
     // Check for empty queue
     if (!song) {
         songQueue.player.stop(true);
@@ -114,4 +115,14 @@ const videoPlayer = async (client, guild, song) => {
     const resource = await createAudioResource(source.stream, { inputType: source.type });
     songQueue.player.play(resource);
     songQueue.connection.subscribe(songQueue.player);
+<<<<<<< HEAD
 }
+=======
+    // Play next song
+    songQueue.player.on(AudioPlayerStatus.Idle, () => {
+        songQueue.songs.shift();
+        videoPlayer(client, guild, songQueue.songs[0]);
+    });
+    await songQueue.textChannel.send("Now Playing: " + song.title);
+}
+>>>>>>> a5b868c0d5969bc06d460853700328dc66d516b6
