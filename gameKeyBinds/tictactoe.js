@@ -7,6 +7,7 @@ module.exports = {
         const player = message.member;
         const game = client.tttGames.get(player);
         if (!game) return;
+        // Check for keybinds
         const key = message.content.toLowerCase();
         if (key === "q") game.makeMove(message, player, 0, 0);
         if (key === "w") game.makeMove(message, player, 0, 1);

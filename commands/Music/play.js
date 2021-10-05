@@ -26,7 +26,6 @@ module.exports = {
         // Get server and song info
         const serverQueue = client.musicQueue.get(interaction.guildId);
         const songName = interaction.options.getString("name");
-
         const song = await getSong(interaction, songName);
         if (!song) return;
 
@@ -61,6 +60,13 @@ module.exports = {
     }
 }
 
+/**
+ * Searches for the song using the input provided.
+ *
+ * @param interaction The user interaction object
+ * @param songName The input passed by the user
+ * @returns {Promise<{title: any, url: string}|Message|APIMessage|{title: string, url: string}|undefined>} The song object
+ */
 const getSong = async (interaction, songName) => {
     const check = youtube.yt_validate(songName);
     if (check) { // URL passed
@@ -78,11 +84,23 @@ const getSong = async (interaction, songName) => {
         }
         const video = await videoFinder(songName);
         // Check if video exists
-        if (video) return { title: video.title, url: video.url };
-        else await interaction.editReply("Error finding video"); return undefined;
+        if (video) {
+            return { title: video.title, url: video.url };
+        } else {
+            await interaction.editReply("Error finding video");
+            return undefined;
+        }
     }
 }
 
+/**
+ * Joins the voice channel passed via the arguments.
+ *
+ * @param interaction The user interaction object
+ * @param vcChannel The voice channel ID
+ * @param queueConstructor The queue contructor for this specific server
+ * @returns {Promise<void>}
+ */
 const joinVC = async (interaction, vcChannel, queueConstructor) => {
     const client = interaction.client;
     try {
@@ -98,7 +116,14 @@ const joinVC = async (interaction, vcChannel, queueConstructor) => {
     }
 }
 
-/** Plays the next song on the queue */
+/**
+ * Plays the song specified.
+ *
+ * @param client Discord client object
+ * @param guild The guild object
+ * @param song The song to playe
+ * @returns {Promise<void>}
+ */
 const videoPlayer = async (client, guild, song) => {
     const songQueue = client.musicQueue.get(guild.id);
     if (!songQueue) return;
