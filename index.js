@@ -76,6 +76,10 @@ client.logger = winston.createLogger({
 client.tttGames = new Map();
 client.tttKBs = require("./gameKeyBinds/tictactoe");
 
+// Load Ultimate TicTacToe
+client.utttGames = new Map();
+client.utttKBs = require("./gameKeyBinds/ultimatetictactoe");
+
 // Error handler
 process.on("unhandledRejection", async error => {
     client.logger.error(error.toString());

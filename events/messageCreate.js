@@ -38,7 +38,10 @@ module.exports = {
         const client = message.client;
         const msgContent = message.content.toLowerCase();
         if (client.tttKBs.keybinds.includes(msgContent)) {
-            return client.tttKBs.execute(message);
+            await client.tttKBs.execute(message);
+        }
+        if (client.utttKBs.keybinds.includes(msgContent)) {
+            await client.utttKBs.execute(message);
         }
 
         message.client.responses.forEach(response => {
