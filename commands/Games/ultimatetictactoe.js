@@ -26,7 +26,7 @@ module.exports = {
             .setStyle("SUCCESS");
         const row = new MessageActionRow().addComponents(button);
         await interaction.reply({
-            content: "<@" + opponent.id + ">, " + interaction.member.user.username + " has challenged you to a match of Tic Tac Toe. Do you accept?",
+            content: "<@" + opponent.id + ">, " + interaction.member.user.username + " has challenged you to a match of Ultimate Tic Tac Toe! Do you accept?",
             components: [row]
         });
         const acceptMsg = await interaction.fetchReply();
@@ -47,7 +47,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setColor("#000000")
                 .setTitle("Ultimate TicTacToe!")
-                .setDescription("Welcome to a game of Ultimate TicTacToe! When it is your turn, press one of the following keys to make your move to select that local board or make a move!" +
+                .setDescription("Welcome to a game of Ultimate TicTacToe! Ultimate Tic Tac Toe is a game that takes Tic Tac Toe to a new level! This game is played by selecting one of the 9 Tic Tac Toe boards to play on, forcing the next player to play in a Tic Tac Toe board indicative of the position last played on a Tic Tac Toe board!" +
                     "\n```q|w|e" +
                     "\n-+-+-" +
                     "\na|s|d" +
