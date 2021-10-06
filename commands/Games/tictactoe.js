@@ -18,7 +18,7 @@ module.exports = {
         // Error Check
         if (client.tttGames.has(interaction.member)) return interaction.reply("You are already in a game");
         if (client.tttGames.has(opponent)) return interaction.reply("Opponent is in a game");
-        //if (interaction.member === opponent) return interaction.reply("Get some friends smh...");
+        if (interaction.member === opponent) return interaction.reply("Get some friends smh...");
         // Ask opponent to accept
         const button = new MessageButton()
             .setCustomId("acceptTTT")

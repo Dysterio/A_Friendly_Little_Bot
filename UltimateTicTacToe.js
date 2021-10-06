@@ -204,6 +204,7 @@ class UltimateTicTacToe {
         msg.delete();
         // Select game
         if (!this.#currGame) {
+            if (!Array.isArray(this.#board[row][col])) return msg.reply("Invalid move");
             this.#currGame = {
                 board: this.#board[row][col],
                 row: row,
@@ -256,10 +257,11 @@ class UltimateTicTacToe {
 
     displayState(state) {
         const currPlayer = this.#p1Turn ? this.#player1 : this.#player2;
+        const currPlayerSymb = this.#p1Turn ? this.#player1Symb : this.#player2Symb;
         const lastPlayer = this.#p1Turn ? this.#player2 : this.#player1;
         let desc;
         if (!state) {
-            desc = currPlayer.user.username + "'s turn.";
+            desc = currPlayer.user.username + "'s turn " + currPlayerSymb;
         } else {
             if (state === "win") {
                 desc = lastPlayer.user.username + " won!";
