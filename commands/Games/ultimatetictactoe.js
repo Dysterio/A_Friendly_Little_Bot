@@ -21,6 +21,7 @@ module.exports = {
         if (interaction.member === opponent) return interaction.reply("Get some friends smh...");
         // Ask opponent to accept
         const button = new MessageButton()
+            .setCustomId("utttAccept")
             .setLabel("Accept")
             .setStyle("SUCCESS");
         const row = new MessageActionRow().addComponents(button);
