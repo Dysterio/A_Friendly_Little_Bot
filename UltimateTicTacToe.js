@@ -220,14 +220,6 @@ class UltimateTicTacToe {
         const validMove = this.move(row, col);
         if (!validMove) return msg.reply("Invalid move");
 
-        // Check game status
-        const symb = (!this.#p1Turn) ? this.#player1Symb : this.#player2Symb;
-        if (this.checkGameWin()) {
-            this.#board[this.#currGame.row][this.#currGame.col] = symb;
-        } else if (this.checkGameDraw()) {
-            this.#board[this.#currGame.row][this.#currGame.col] = this.#drawTile;
-        }
-
         // Check board status
         if (this.checkBoardWin()) {
             this.displayState("win");
@@ -239,6 +231,14 @@ class UltimateTicTacToe {
             msg.client.utttGames.delete(this.#player2);
             this.displayState("draw");
             return;
+        }
+
+        // Check game status
+        const symb = (!this.#p1Turn) ? this.#player1Symb : this.#player2Symb;
+        if (this.checkGameWin()) {
+            this.#board[this.#currGame.row][this.#currGame.col] = symb;
+        } else if (this.checkGameDraw()) {
+            this.#board[this.#currGame.row][this.#currGame.col] = this.#drawTile;
         }
 
         // Change games
