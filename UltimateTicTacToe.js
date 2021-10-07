@@ -204,7 +204,7 @@ class UltimateTicTacToe {
         msg.delete();
         // Select game
         if (!this.#currGame) {
-            if (!Array.isArray(this.#board[row][col])) return msg.reply("Invalid move");
+            if (!Array.isArray(this.#board[row][col])) return msg.reply("Tile taken");
             this.#currGame = {
                 board: this.#board[row][col],
                 row: row,
@@ -215,6 +215,8 @@ class UltimateTicTacToe {
         }
 
         // Make move
+        const currPlayer = this.#p1Turn ? this.#player1 : this.#player2;
+        if (player !== currPlayer) return msg.reply("Not your turn.");
         const validMove = this.move(row, col);
         if (!validMove) return msg.reply("Invalid move");
 
