@@ -25,7 +25,8 @@
     "ffmpeg-static": "^4.4.0",
     "libsodium-wrappers": "^0.7.9",
     "play-dl": "^0.9.9",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "ansi-regex": ">=5.0.1"
   },
   "devDependencies": {
     "node": "^16.6.1"
