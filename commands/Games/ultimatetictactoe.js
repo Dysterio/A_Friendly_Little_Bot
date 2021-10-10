@@ -47,7 +47,7 @@ module.exports = {
                 return i.reply({ content: "You have already joined another game...", ephemeral: true });
             }
             acceptMsg.delete();
-            if (i.customId === "utttDecline") return;
+            if (i.customId === "utttDecline") return i.reply("Challenge Declined.");
             // Initialize game
             const embed = new MessageEmbed()
                 .setColor("#000000")
@@ -67,7 +67,7 @@ module.exports = {
                 uttt.displayState();
             });
         });
-        collector.on("end", i => {
+        collector.on("end", () => {
             acceptMsg.delete();
         });
     }

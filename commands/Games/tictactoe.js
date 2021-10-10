@@ -47,7 +47,7 @@ module.exports = {
                 return i.reply({ content: "You have already joined another game...", ephemeral: true });
             }
             acceptMsg.delete();
-            if (i.customId === "tttDecline") return;
+            if (i.customId === "tttDecline") return i.reply("Challenge Declined");
             // Initialize game
             const embed = new MessageEmbed()
                 .setColor("#000000")
@@ -67,7 +67,7 @@ module.exports = {
                 ttt.announceNextTurn(null, ttt.currPlayer());
             });
         });
-        collector.on("end", i => {
+        collector.on("end", () => {
             acceptMsg.delete();
         });
     }
