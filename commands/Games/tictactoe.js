@@ -38,6 +38,7 @@ module.exports = {
             componentType: "BUTTON",
             time: 60000
         });
+        let deleted = false;
         collector.on("collect", i => {
             // Error Check
             if (i.user.id !== opponent.id) {
@@ -47,6 +48,7 @@ module.exports = {
                 return i.reply({ content: "You have already joined another game...", ephemeral: true });
             }
             acceptMsg.delete();
+            deleted = true;
             if (i.customId === "tttDecline") return i.reply("Challenge Declined");
             // Initialize game
             const embed = new MessageEmbed()
@@ -68,6 +70,7 @@ module.exports = {
             });
         });
         collector.on("end", () => {
+            if (deleted) return;
             acceptMsg.delete();
         });
     }
