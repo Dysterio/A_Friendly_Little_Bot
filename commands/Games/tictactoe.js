@@ -20,11 +20,15 @@ module.exports = {
         if (client.tttGames.has(opponent)) return interaction.reply("Opponent is in a game");
         if (interaction.member === opponent) return interaction.reply("Get some friends smh...");
         // Ask opponent to accept
-        const button = new MessageButton()
+        const acceptButton = new MessageButton()
             .setCustomId("tttAccept")
             .setLabel("Accept")
             .setStyle("SUCCESS");
-        const row = new MessageActionRow().addComponents(button);
+        const declineButton = new MessageButton()
+            .setCustomId("tttDecline")
+            .setLabel("Decline")
+            .setStyle("DANGER");
+        const row = new MessageActionRow().addComponents(acceptButton, declineButton);
         await interaction.reply({
             content: "<@" + opponent.id + ">, " + interaction.member.user.username + " has challenged you to a match of Tic Tac Toe. Do you accept?",
             components: [row]
@@ -43,6 +47,7 @@ module.exports = {
                 return i.reply({ content: "You have already joined another game...", ephemeral: true });
             }
             acceptMsg.delete();
+            if (i.customId === "tttDecline") return;
             // Initialize game
             const embed = new MessageEmbed()
                 .setColor("#000000")
@@ -61,6 +66,9 @@ module.exports = {
                 // Show board to players
                 ttt.announceNextTurn(null, ttt.currPlayer());
             });
-        })
+        });
+        collector.on("end", i => {
+            acceptMsg.delete();
+        });
     }
 }

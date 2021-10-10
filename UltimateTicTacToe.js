@@ -197,6 +197,11 @@ class UltimateTicTacToe {
         }
     }
 
+    deleteGame(msg) {
+        msg.client.utttGames.delete(this.#player1);
+        msg.client.utttGames.delete(this.#player2);
+    }
+
     /**
      * Makes a move
      */
@@ -220,25 +225,23 @@ class UltimateTicTacToe {
         const validMove = this.move(row, col);
         if (!validMove) return msg.reply("Invalid move");
 
-        // Check board status
-        if (this.checkBoardWin()) {
-            this.displayState("win");
-            msg.client.utttGames.delete(this.#player1);
-            msg.client.utttGames.delete(this.#player2);
-            return;
-        } else if (this.checkBoardDraw()) {
-            msg.client.utttGames.delete(this.#player1);
-            msg.client.utttGames.delete(this.#player2);
-            this.displayState("draw");
-            return;
-        }
-
         // Check game status
         const symb = (!this.#p1Turn) ? this.#player1Symb : this.#player2Symb;
         if (this.checkGameWin()) {
             this.#board[this.#currGame.row][this.#currGame.col] = symb;
         } else if (this.checkGameDraw()) {
             this.#board[this.#currGame.row][this.#currGame.col] = this.#drawTile;
+        }
+
+        // Check board status
+        if (this.checkBoardWin()) { // Game won
+            this.displayState("win");
+            this.deleteGame(msg);
+            return;
+        } else if (this.checkBoardDraw()) { // Game drawn
+            this.displayState("draw");
+            this.deleteGame(msg);
+            return;
         }
 
         // Change games
