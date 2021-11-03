@@ -21,25 +21,15 @@ for (const file of eventFiles) {
     }
 }
 
-// Load commands
+// Load slash commands
 client.commands = new Collection();
 const commandFolders = fs.readdirSync("./commands");
 for (const folder of commandFolders) {
     const commandFiles = fs.readdirSync("./commands/" + folder).filter(file => file.endsWith(".js"));
     for (const file of commandFiles) {
         const command = require(`./commands/${folder}/${file}`);
-        // Set a new item in the Collection
-        // With the key as the command name and the value as the exported module
         client.commands.set(command.data.name, command);
     }
-}
-
-// Load responses
-client.responses = new Collection();
-const responseFiles = fs.readdirSync("./responses").filter(file => file.endsWith(".js"));
-for (const file of responseFiles) {
-    const response = require(`./responses/${file}`);
-    client.responses.set(response.name, response);
 }
 
 // Load admin commands

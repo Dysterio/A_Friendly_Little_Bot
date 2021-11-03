@@ -43,10 +43,5 @@ module.exports = {
         if (client.utttKBs.keybinds.includes(msgContent)) {
             await client.utttKBs.execute(message);
         }
-
-        message.client.responses.forEach(response => {
-            if (!msgContent.split(/ +/).includes(response.name)) return;
-            response.execute(message);
-        });
     },
 };
