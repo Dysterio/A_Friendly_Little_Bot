@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const UltimateTicTacToe = require("../../UltimateTicTacToe");
+const UltimateTicTacToe = require("../../Games/UltimateTicTacToe");
 const { MessageActionRow, MessageButton, MessageEmbed} = require("discord.js");
 
 module.exports = {

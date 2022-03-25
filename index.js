@@ -2,7 +2,7 @@
 const fs = require("fs");
 const winston = require("winston");
 require("dotenv").config();
-const TicTacToe = require("./TicTacToe");
+const TicTacToe = require("./Games/TicTacToe");
 // Require the necessary discord.js classes
 const { Client, Collection } = require("discord.js");
 
