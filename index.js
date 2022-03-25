@@ -2,7 +2,6 @@
 const fs = require("fs");
 const winston = require("winston");
 require("dotenv").config();
-const TicTacToe = require("./Games/TicTacToe");
 // Require the necessary discord.js classes
 const { Client, Collection } = require("discord.js");
 
@@ -22,17 +21,28 @@ for (const file of eventFiles) {
 }
 
 // Load slash commands
-client.commands = new Collection();
-const commandFolders = fs.readdirSync("./commands");
-for (const folder of commandFolders) {
-    const commandFiles = fs.readdirSync("./commands/" + folder).filter(file => file.endsWith(".js"));
+client.slashCommands = new Collection();
+const sCommandFolders = fs.readdirSync("./slashCommands");
+for (const folder of sCommandFolders) {
+    const commandFiles = fs.readdirSync("./slashCommands/" + folder).filter(file => file.endsWith(".js"));
     for (const file of commandFiles) {
-        const command = require(`./commands/${folder}/${file}`);
-        client.commands.set(command.data.name, command);
+        const command = require(`./slashCommands/${folder}/${file}`);
+        client.slashCommands.set(command.data.name, command);
     }
 }
 
-// Load admin commands
+// Load prefix commands
+client.prefixCommands = new Collection();
+const pCommandFolders = fs.readdirSync("./prefixCommands");
+for (const folder of pCommandFolders) {
+    const commandFiles = fs.readdirSync("./prefixCommands/" + folder).filter(file => file.endsWith(".js"));
+    for (const file of commandFiles) {
+        const command = require(`./prefixCommands/${folder}/${file}`);
+        client.prefixCommands.set(command.name, command);
+    }
+}
+
+// Load admin slashCommands
 client.admin = new Collection();
 const adminFiles = fs.readdirSync("./admin").filter(file => file.endsWith(".js"));
 for (const file of adminFiles) {

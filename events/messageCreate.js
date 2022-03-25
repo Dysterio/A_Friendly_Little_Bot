@@ -36,6 +36,9 @@ module.exports = {
     },
     async messageHandler(message) {
         const client = message.client;
+        if (message.content.startsWith(process.env.PREFIX)) {
+            return this.prefixCommandHandler(message);
+        }
         const msgContent = message.content.toLowerCase();
         if (client.tttKBs.keybinds.includes(msgContent)) {
             await client.tttKBs.execute(message);
@@ -43,5 +46,19 @@ module.exports = {
         if (client.utttKBs.keybinds.includes(msgContent)) {
             await client.utttKBs.execute(message);
         }
+    },
+    async prefixCommandHandler(message) {
+        // Get command & args
+        const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/);
+        const commandName = args.shift();
+        const command = message.client.prefixCommands.get(commandName);
+        // Execute command
+        if (!command) return;
+        command.execute(message, args)
+            .catch(error => {
+                const log = error.toString();
+                message.client.logger.error(log);
+                throw error;
+            });
     },
 };
