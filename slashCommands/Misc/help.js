@@ -9,9 +9,9 @@ module.exports = {
     usage: "",
     async execute(interaction) {
         // Create embed
-        let commands = new MessageEmbed()
+        let slashCommands = new MessageEmbed()
             .setColor("#0000000")
-            .setTitle("A Friendly Little Bot's Commands")
+            .setTitle("A Friendly Little Bot's Slash Commands")
             .setThumbnail(interaction.client.users.cache.get(process.env.ADMIN_ID).avatarURL());
         // Add slash commands
         const sCommandFolders = fs.readdirSync("./slashCommands");
@@ -22,8 +22,12 @@ module.exports = {
                 const command = require(`../../slashCommands/${folder}/${file}`);
                 group += `**/${command.data.name} ${command.usage}**\n➠${command.data.description}\n`;
             }
-            commands.addField(folder + " ⭐", group);
+            slashCommands.addField(folder + " ⭐", group);
         }
+        // Create embed
+        let prefixCommands = new MessageEmbed()
+            .setColor("#0000000")
+            .setTitle("A Friendly Little Bot's Prefix Commands")
         // Add prefix commands
         const pCommandFolders = fs.readdirSync("./prefixCommands");
         for (const folder of pCommandFolders) {
@@ -33,10 +37,10 @@ module.exports = {
                 const command = require(`../../prefixCommands/${folder}/${file}`);
                 group += `**/${command.name} ${command.usage}**\n➠${command.description}\n`;
             }
-            commands.addField(folder + " ⭐", group);
+            prefixCommands.addField(folder + " ⭐", group);
         }
         // Send commands
-        interaction.reply({ embeds: [commands] }).then(() => {
+        interaction.reply({ embeds: [slashCommands, prefixCommands] }).then(() => {
             interaction.client.logger.info("Retrieved user commands");
         });
     }
