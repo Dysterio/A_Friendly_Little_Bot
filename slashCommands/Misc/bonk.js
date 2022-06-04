@@ -17,6 +17,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setColor("#000000")
             .setTitle("Horny Detected")
+            .setThumbnail("https://cdn.discordapp.com/attachments/891134318565535855/982768889383485530/unknown.png")
             .setDescription(`${userID} has been reported for being publicly horny.\nRemember to keep it PG lads smh...`);
         interaction.client.db.query(`SELECT \"count\" FROM \"HORNY_COUNT\" WHERE \"userID\"=\'${userID.id}\';`, (err, res) => {
             if (err) throw err;
