@@ -12,13 +12,17 @@ module.exports = {
                 .setRequired(true)),
     usage: "<target>",
     async execute(interaction) {
-        const userID = interaction.options.getUser("user");
-        if (userID.bot) return interaction.reply("Yeah I doubt that...");
-        const embed = new MessageEmbed()
+        let userID = interaction.options.getUser("user");
+        let embed = new MessageEmbed()
             .setColor("#000000")
             .setTitle("Horny Detected")
             .setThumbnail("https://cdn.discordapp.com/attachments/891134318565535855/982768889383485530/unknown.png")
             .setDescription(`${userID} has been reported for being publicly horny.\nRemember to keep it PG lads smh...`);
+        if (userID.bot) {
+            embed = embed.setDescription(`${interaction.user} has tried something really dumb.\nFeel free to publicly shame them for their stupidity.`);
+            userID = interaction.user;
+            if (userID.bot) return interaction.reply("Please leave me alone...");
+        }
         interaction.client.db.query(`SELECT \"count\" FROM \"HORNY_COUNT\" WHERE \"userID\"=\'${userID.id}\';`, (err, res) => {
             if (err) throw err;
             let query = `INSERT INTO "HORNY_COUNT" VALUES (${userID.id}, ${1});`
