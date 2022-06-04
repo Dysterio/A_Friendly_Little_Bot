@@ -1,6 +1,7 @@
 // Libraries
 const fs = require("fs");
 const winston = require("winston");
+const pg = require("pg");
 require("dotenv").config();
 // Require the necessary discord.js classes
 const { Client, Collection } = require("discord.js");
@@ -8,6 +9,14 @@ const { Client, Collection } = require("discord.js");
 // Create a new client instance
 const client = new Client({ intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_EMOJIS_AND_STICKERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS", "GUILD_VOICE_STATES"],
                                 partials: ["MESSAGE", "CHANNEL", "REACTION"] });
+
+client.db = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+client.db.connect();
 
 // Load events
 const eventFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"));

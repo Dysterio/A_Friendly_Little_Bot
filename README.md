@@ -8,4 +8,5 @@ TOKEN=<Bot Token>
 CLIENT_ID=<The Bot's Discord ID>
 ADMIN_ID=<Your Discord ID>
 PREFIX=<Prefix For Commands>
+DATABASE_URL=<Postgres Database URL>
 ```

@@ -25,6 +25,7 @@
     "express": "^4.17.1",
     "ffmpeg-static": "^4.4.0",
     "libsodium-wrappers": "^0.7.9",
+    "pg": "^8.7.3",
     "play-dl": "^0.9.9",
     "winston": "^3.3.3"
   },
