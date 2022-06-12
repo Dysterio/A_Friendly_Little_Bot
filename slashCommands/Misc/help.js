@@ -35,7 +35,7 @@ module.exports = {
             const commandFiles = fs.readdirSync("./prefixCommands/" + folder).filter(file => file.endsWith(".js"));
             for (const file of commandFiles) {
                 const command = require(`../../prefixCommands/${folder}/${file}`);
-                group += `**/${command.name} ${command.usage}**\n➠${command.description}\n`;
+                group += `**/${command.name} ${command.usage}**\n➠${command.desc}\n`;
             }
             prefixCommands.addField(folder + " ⭐", group);
         }

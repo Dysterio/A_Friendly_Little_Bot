@@ -19,10 +19,13 @@ module.exports = {
             let user = await interaction.client.users.fetch(u[0]);
             leaderboardStr += `${user.username} - ${u[1]}\n`;
         }
-        const embed = new MessageEmbed()
+        let embed = new MessageEmbed()
             .setColor("#000000")
             .setTitle("Horniness Leaderboard smh...")
             .setDescription(leaderboardStr);
+        if (leaderboard.length === 0) {
+            embed = embed.setImage("https://cdn.discordapp.com/attachments/823146527294881852/985443688454955018/unknown.png");
+        }
         return interaction.reply({embeds: [embed]});
     }
 }
