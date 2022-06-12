@@ -6,6 +6,6 @@ module.exports = {
         .setDescription("Replies with The Meaning Of Life!"),
     usage: "",
     async execute(interaction) {
-        await interaction.reply("🐒🐵\n🙊🙉🙈");
+        await interaction.reply("🐵");
     }
 }
