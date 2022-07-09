@@ -12,7 +12,7 @@ module.exports = {
             numOfTeams = parseInt(people.shift());
         }
         if (people.length < 3 || numOfTeams < 2) {
-            message.reply("Yeah... no...");
+            message.reply("You can do that by yourself...");
             return;
         }
         // Distribute into teams
