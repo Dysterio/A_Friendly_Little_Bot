@@ -1,44 +1,19 @@
 {
   "name": "a_friendly_little_bot",
   "version": "1.0.0",
+  "description": "A friendly little bot to liven up your discord server!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ."
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Dysterio",
   "license": "ISC",
-  "engines": {
-    "node": "16.x",
-    "npm": "7.x"
-  },
   "dependencies": {
-    "@discordjs/builders": "^0.5.0",
-    "@discordjs/opus": "^0.8.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "@discordjs/voice": "^0.6.0",
-    "ansi-regex": ">=5.0.1",
-    "discord-api-types": "^0.22.0",
-    "discord.js": "^13.1.0",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "ffmpeg-static": "^4.4.0",
-    "libsodium-wrappers": "^0.7.9",
-    "pg": "^8.7.3",
-    "play-dl": "^0.9.9",
-    "winston": "^3.3.3"
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.3",
+    "mongoose": "^6.7.1"
   },
   "devDependencies": {
-    "node": "^16.6.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Dysterio/A_Friendly_Little_Bot.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Dysterio/A_Friendly_Little_Bot/issues"
-  },
-  "homepage": "https://github.com/Dysterio/A_Friendly_Little_Bot#readme",
-  "description": ""
+    "eslint": "^8.26.0"
+  }
 }

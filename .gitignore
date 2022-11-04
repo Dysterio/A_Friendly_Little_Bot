@@ -1,5 +1,2 @@
-logs.log
 .env
 node_modules
-deploy-commands.js
-package-lock.json

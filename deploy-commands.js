@@ -1,32 +1,49 @@
-const fs = require("fs");
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
-require("dotenv").config();
+const { REST, Routes } = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
+require('dotenv').config();
 
 const commands = [];
-const commandFolders = fs.readdirSync("./slashCommands");
-for (const folder of commandFolders) {
-    const commandFiles = fs.readdirSync("./slashCommands/" + folder).filter(file => file.endsWith(".js"));
-
-    for (const file of commandFiles) {
-        const command = require(`./slashCommands/${folder}/${file}`);
-        commands.push(command.data.toJSON());
-    }
+// Load commands
+const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const commandPath = path.join(__dirname, 'commands', file);
+    const command = require(commandPath);
+    commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: '9' }).setToken(`${process.env.TOKEN}`);
+// Construct and prepare an instance of the REST module
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
+// Deploy commands to all guilds
+const deployCommandsGlobally = async () => {
+    // Delete all commands
+    rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: [] })
+        .then(() => console.log('Successfully deleted all application commands.'))
+        .catch(console.error);
+    // Deploy commands
+    rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands })
+        .then(() => console.log('Successfully registered application commands.'))
+        .catch(console.error);
+};
+
+// Deploy commands to dev guild
+const deployCommandsToDevGuild = async () => {
+    // Delete all commands
+    rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), { body: [] })
+        .then(() => console.log('Successfully deleted all application commands.'))
+        .catch(console.error);
+    // Deploy commands
+    rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.DEV_GUILD_ID), { body: commands })
+        .then(() => console.log('Successfully registered application commands.'))
+        .catch(console.error);
+};
+
+
+// Deploy commands
 (async () => {
     try {
-        console.log("Started refreshing application (/) commands");
-
-        await rest.put(
-            // Routes.applicationCommands(process.env.CLIENT_ID),
-            Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
-            { body: commands },
-        );
-
-        console.log('Successfully registered application (/) commands.');
+        deployCommandsToDevGuild();
     } catch (error) {
         console.error(error);
     }

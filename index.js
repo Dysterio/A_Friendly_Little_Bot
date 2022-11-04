@@ -1,100 +1,59 @@
-// Libraries
-const fs = require("fs");
-const winston = require("winston");
-const pg = require("pg");
-require("dotenv").config();
-// Require the necessary discord.js classes
-const { Client, Collection } = require("discord.js");
+// Requires
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
+require('dotenv').config();
 
 // Create a new client instance
-const client = new Client({ intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_EMOJIS_AND_STICKERS", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS", "GUILD_VOICE_STATES"],
-                                partials: ["MESSAGE", "CHANNEL", "REACTION"] });
-
-client.db = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
+const client = new Client({
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ],
 });
-client.db.connect();
 
 // Load events
-const eventFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"));
+client.events = new Collection();
+const eventFiles = fs.readdirSync(path.join(__dirname, 'events')).filter(file => file.endsWith('.js'));
 for (const file of eventFiles) {
-    const event = require(`./events/${file}`);
+    const eventPath = path.join(__dirname, 'events', file);
+    const event = require(eventPath);
+    client.events.set(event.name, event);
+    // Bind event
     if (event.once) {
-        client.once(event.name, async (...args) => event.execute(...args));
+        client.once(event.name, (...args) => event.execute(...args));
     } else {
-        client.on(event.name, async (...args) => event.execute(...args));
+        client.on(event.name, (...args) => event.execute(...args));
     }
 }
 
-// Load slash commands
-client.slashCommands = new Collection();
-const sCommandFolders = fs.readdirSync("./slashCommands");
-for (const folder of sCommandFolders) {
-    const commandFiles = fs.readdirSync("./slashCommands/" + folder).filter(file => file.endsWith(".js"));
-    for (const file of commandFiles) {
-        const command = require(`./slashCommands/${folder}/${file}`);
-        client.slashCommands.set(command.data.name, command);
-    }
+// Load commands
+client.commands = new Collection();
+const commandFiles = fs.readdirSync(path.join(__dirname, 'commands')).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const commandPath = path.join(__dirname, 'commands', file);
+    const command = require(commandPath);
+    client.commands.set(command.data.name, command);
 }
 
-// Load prefix commands
-client.prefixCommands = new Collection();
-const pCommandFolders = fs.readdirSync("./prefixCommands");
-for (const folder of pCommandFolders) {
-    const commandFiles = fs.readdirSync("./prefixCommands/" + folder).filter(file => file.endsWith(".js"));
-    for (const file of commandFiles) {
-        const command = require(`./prefixCommands/${folder}/${file}`);
-        client.prefixCommands.set(command.name, command);
-    }
+// Load responses
+client.responses = new Collection();
+const responseFiles = fs.readdirSync(path.join(__dirname, 'responses')).filter(file => file.endsWith('.js'));
+for (const file of responseFiles) {
+    const responsePath = path.join(__dirname, 'responses', file);
+    const response = require(responsePath);
+    client.responses.set(response.name, response);
 }
 
-// Load admin slashCommands
-client.admin = new Collection();
-const adminFiles = fs.readdirSync("./admin").filter(file => file.endsWith(".js"));
-for (const file of adminFiles) {
-    const admin = require(`./admin/${file}`);
-    client.admin.set(admin.name, admin);
-}
+// Connect to MongoDB
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).catch((err) => {
+    console.error(err);
+});
 
-// Load music player
-client.musicQueue = new Map();
-
-// Load logger
-const logLevels = { error: 0, warn: 1, info: 2, };
-client.logger = winston.createLogger({
-    levels: logLevels,
-    transports: [
-        new winston.transports.Console({
-            level: "info"
-        }),
-        new winston.transports.File({
-            filename: "logs.log",
-            level: "info"
-        }),
-    ],
-    format: winston.format.combine(
-        winston.format.timestamp({ format: "DD-MMM-YY HH:mm:ss" }),
-        winston.format.printf(info => `${info.timestamp} => [${info.level.toUpperCase()}]: ${info.message}`),
-    ),
-})
-
-// Load Tic Tac Toe
-client.tttGames = new Map();
-client.tttKBs = require("./gameKeyBinds/tictactoe");
-
-// Load Ultimate TicTacToe
-client.utttGames = new Map();
-client.utttKBs = require("./gameKeyBinds/ultimatetictactoe");
-
-// Error handler
-process.on("unhandledRejection", async error => {
-    client.logger.error(error.toString());
-    const admin = client.users.cache.get(process.env.ADMIN_ID);
-    await admin.send(error.stack);
-})
-
-// Login to Discord with the client token
+// Log In
 client.login(process.env.TOKEN);

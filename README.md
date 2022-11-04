@@ -1,12 +1,12 @@
 # A Friendly Little Bot
 
-Packed with fun features like challenging your friends to a game of tic tac toe, and streaming music from YouTube in a voice channel, A Friendly Little Bot is ideal for spicing up your monotonous servers.
+Packed with fun features like challenging your friends to a friendly match of tic tac toe, A Friendly Little Bot is ideal for spicing up your monotonous servers.
 
-The source code requires the following ENV variables which should be included in a file titled `.env`:
+To build and run the source code yourself, you will need to create a `.env` file in the root directory of the project. The file should contain the following:
+
 ```
 TOKEN=<Bot Token>
 CLIENT_ID=<The Bot's Discord ID>
-ADMIN_ID=<Your Discord ID>
-PREFIX=<Prefix For Commands>
-DATABASE_URL=<Postgres Database URL>
+DEV_GUILD_ID=<Testing Server's ID> Note that this is optional
+MONGODB_URL=<URL to MongoDB database>
 ```

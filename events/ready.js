@@ -1,10 +1,9 @@
+const { Events } = require('discord.js');
+
 module.exports = {
-    name: "ready",
+    name: Events.ClientReady,
     once: true,
-    async execute(client) {
-        client.users.fetch(process.env.ADMIN_ID).then(admin => {
-            admin.send("🟢 " + client.user.username + " is online! 🟢");
-        });
-        client.logger.info(`\n\t\t\tReady! Logged in as ${client.user.tag}`);
-    }
-}
+    execute(client) {
+        console.log(`${client.user.tag} is Online!`);
+    },
+};
