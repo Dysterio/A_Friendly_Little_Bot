@@ -3,6 +3,7 @@ const GuildPref = require('../models/GuildPref');
 
 const responses = [
     { name: 'Dad Jokes', value: 'dad' },
+    { name: 'Bot Ping', value: 'ping' },
 ];
 
 module.exports = {
