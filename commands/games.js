@@ -65,6 +65,11 @@ module.exports = {
             await interaction.reply({ content: 'You can\'t play against yourself!', ephemeral: true });
             return;
         }
+        // Check if bot is challenged
+        if (opponent.bot) {
+            await interaction.reply('Challenge Accepted!');
+            return this.startGame(interaction, interaction.user.id, process.env.CLIENT_ID);
+        }
         // Ask opponent to accept
         await interaction.reply({
             content: `${userMention(opponent.id)}, ${interaction.user.username} has challenged you to a match of Tic Tac Toe. Do you accept?`,
@@ -105,9 +110,7 @@ module.exports = {
                 });
 
                 // Start game
-                i.channel.send('Game being created...').then(msg => {
-                    new TicTacToeView(msg, interaction.user.id, opponent.id);
-                });
+                this.startGame(i, interaction.user.id, opponent.id);
             } else if (i.customId === 'decline') {
                 // Decline
                 await i.update({
@@ -127,6 +130,11 @@ module.exports = {
                     msg.edit({ components: [] });
                 }
             });
+        });
+    },
+    startGame(interaction, player1, player2) {
+        interaction.channel.send('Game being created...').then(msg => {
+            new TicTacToeView(msg, player1, player2);
         });
     },
 };

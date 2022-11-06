@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Abstract class for a game.
  * This class should be extended by all games.
@@ -13,7 +12,8 @@ class GameModel {
     constructor(player1, player2) {
         this.player1 = player1;
         this.player2 = player2;
-        this.turn = Math.random() < 0.5 ? this.player1 : this.player2;
+        if (this.player2 === process.env.CLIENT_ID) this.turn = this.player1;
+        else this.turn = Math.random() < 0.5 ? this.player1 : this.player2;
     }
 
     /**
@@ -48,7 +48,7 @@ class GameModel {
      *
      * @returns {number | undefined} The winning player's ID, or undefined if no one has won.
      */
-    checkWin() {
+    static checkWin(board) {
         throw new Error('checkWin() not implemented.');
     }
 

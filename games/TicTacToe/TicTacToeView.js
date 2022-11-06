@@ -126,7 +126,7 @@ class TicTacToeView extends GameView {
      */
     async update(message) {
         // Check if game is over
-        const winner = this.game.checkWin();
+        const winner = TicTacToeModel.checkWin(this.game.board);
         if (winner) {
             this.gameInfo.fields[2].name = `${userMention(winner)} won!`;
             this.gameInfo.fields[2].value = '\u200b';
