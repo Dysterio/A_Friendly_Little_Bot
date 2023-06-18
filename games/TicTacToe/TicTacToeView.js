@@ -1,5 +1,4 @@
-const { userMention } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
+const { userMention, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const GameView = require('../GameView');
 const TicTacToeModel = require('./TicTacToeModel');
 const GameStats = require('../../models/GameStats');
@@ -73,8 +72,8 @@ class TicTacToeView extends GameView {
                             rowButtons.push(
                                 new ButtonBuilder()
                                     .setCustomId(`tictactoe_${r}_${c}`)
-                                    .setLabel(' ')
-                                    .setStyle('Secondary'),
+                                    .setLabel('\u200b')
+                                    .setStyle(ButtonStyle.Secondary),
                             );
                         }
                         return rowButtons;
@@ -152,14 +151,14 @@ class TicTacToeView extends GameView {
                         const rowButtons = [];
                         for (let c = 0; c < 3; c++) {
                             const label = this.game.board[r][c] === this.X ? 'X' :
-                                            this.game.board[r][c] === this.O ? 'O' :
-                                            ' ';
+                                this.game.board[r][c] === this.O ? 'O' :
+                                    '\u200b';
                             rowButtons.push(
                                 new ButtonBuilder()
                                     .setCustomId(`tictactoe_${r}_${c}`)
                                     .setLabel(label)
-                                    .setStyle(label.trim() ?
-                                        (label === 'X' ? 'Danger' : 'Primary') : 'Secondary'),
+                                    .setStyle(label !== '\u200b' ?
+                                        (label === 'X' ? ButtonStyle.Danger : ButtonStyle.Primary) : ButtonStyle.Secondary),
                             );
                         }
                         return rowButtons;
